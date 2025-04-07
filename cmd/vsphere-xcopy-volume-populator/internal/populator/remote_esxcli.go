@@ -155,12 +155,17 @@ func (p *RemoteEsxcliPopulator) Populate(sourceVMDKFile string, volumeHandle str
 		return fmt.Errorf("failed to locate the target LUN %s. Check the LUN details and the host mapping response: %s", naa, err)
 	}
 
+	start := time.Now()
 	r, err = p.VSphereClient.RunEsxCommand(context.Background(), host, []string{"vmkfstools", "clone", "-s", vmDisk.Path(), "-t", targetLUN})
+	duration := time.Since(start)
+
 	if err != nil {
 
 		klog.Infof("error response from esxcli %+v", r)
 		return err
 	}
+
+	klog.Infof("vmkfstools clone took %s", duration)
 
 	response := ""
 	klog.Info("respose from esxcli ", r)
