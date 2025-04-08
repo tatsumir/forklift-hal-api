@@ -56,5 +56,8 @@ func ParseVmdkPath(vmdkPath string) (VMDisk, error) {
 	pathParts := strings.SplitN(parts[1], "/", 2)
 	vmname := pathParts[0]
 	vmdk := pathParts[1]
+	vmdkParts := strings.SplitN(vmdk, ".", 2)
+	vmname_sub := vmdkParts[0]
+	vmname = vmname_sub
 	return VMDisk{VMName: vmname, Datacenter: datastore, VmdkFile: vmdk}, nil
 }
