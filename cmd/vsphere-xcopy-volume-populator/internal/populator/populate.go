@@ -41,10 +41,11 @@ type VMDisk struct {
 	VMName     string
 	Datacenter string
 	VmdkFile   string
+	VmnameDir  string
 }
 
 func (d *VMDisk) Path() string {
-	return fmt.Sprintf("/vmfs/volumes/%s/%s/%s", d.Datacenter, d.VMName, d.VmdkFile)
+	return fmt.Sprintf("/vmfs/volumes/%s/%s/%s", d.Datacenter, d.VmnameDir, d.VmdkFile)
 }
 
 func ParseVmdkPath(vmdkPath string) (VMDisk, error) {
@@ -54,10 +55,9 @@ func ParseVmdkPath(vmdkPath string) (VMDisk, error) {
 	}
 	datastore := strings.TrimPrefix(parts[0], "[")
 	pathParts := strings.SplitN(parts[1], "/", 2)
-	vmname := pathParts[0]
+	vmname_dir := pathParts[0]
 	vmdk := pathParts[1]
 	vmdkParts := strings.SplitN(vmdk, ".", 2)
 	vmname_sub := vmdkParts[0]
-	vmname = vmname_sub
-	return VMDisk{VMName: vmname, Datacenter: datastore, VmdkFile: vmdk}, nil
+	return VMDisk{VMName: vmname_sub, Datacenter: datastore, VmdkFile: vmdk, VmnameDir: vmname_dir}, nil
 }
